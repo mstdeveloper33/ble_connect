@@ -43,8 +43,11 @@ class _MyHomePageState extends State<MyHomePage> {
                                   onTap: () {
                                     controller.connectToDevice(data.device);
                                     Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                            builder: (context) => TextSend()));
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            TextSend(device: data.device),
+                                      ),
+                                    );
                                   },
                                   title: Text(
                                     data.device.name ?? "unknown",

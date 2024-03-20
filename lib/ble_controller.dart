@@ -1,5 +1,7 @@
 
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:get/get.dart';
@@ -9,7 +11,7 @@ class BleController extends GetxController {
   FlutterBlue ble = FlutterBlue.instance;
   // VZBEL için tanıma kontrolü
   BluetoothDevice? targetDevice;
-  String targetDeviceName = "org.bluez";
+  String targetDeviceName = "Vzbel";
   String targetDeviceUUID = "6e400001-b5a3-f393-e0a9-e50e24dcca9e";
 
   //late BluetoothDevice raspberryPiDevice;
@@ -48,6 +50,17 @@ class BleController extends GetxController {
     }
   }
 
+  Future<void> sendData(BluetoothDevice device, String data) async {
+    List<BluetoothService> services = await device.discoverServices();
+    services.forEach((service) {
+      service.characteristics.forEach((characteristic) async {
+        if (characteristic.uuid == '6e400003-b5a3-f393-e0a9-e50e24dcca9e') {
+          await characteristic.write(utf8.encode(data));
+        }
+      });
+    });
+  }
+
   Future<void> connectToDevice(BluetoothDevice device) async {
     // if (device.state == BluetoothDeviceState.connected) {
     //   await device.disconnect();
@@ -68,6 +81,7 @@ class BleController extends GetxController {
   }
 
   Stream<List<ScanResult>> get scanResult => ble.scanResults;
+  
 }
 
 
